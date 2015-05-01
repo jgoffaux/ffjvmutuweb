@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS `club`;
+
+CREATE TABLE `club` (
+  `ID` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `Name` varchar(100)
+);
+
+
