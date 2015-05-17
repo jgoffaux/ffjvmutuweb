@@ -1,6 +1,15 @@
 # ffjvmutuweb
 Sites FFJV Mutualisé
 
+# Prerequis Package : 
+* cronolog
+* apache2-mpm-itk
+* apache2 
+* php5 libapache2-mod-php5
+* mysql-server php5-mysql
+* proftpd
+* bsd-mailx / postfix
+
 # Actions
 
 * Creation
