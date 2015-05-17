@@ -1,7 +1,8 @@
 <?php
-if (isset($_POST['var'])) {
-	$action = $_POST['var'];
-}	
+include "functions/mysql.php";
+
+if (isset($_GET['var'])) {
+	$action = $_GET['var'];
         switch ($action):
                 // Ajoute un parametre
                 case "1":
@@ -16,6 +17,9 @@ if (isset($_POST['var'])) {
                 default:
                         include 'accueil.html';
         endswitch;
+} else {
+	include 'accueil.html';
+}
 ?>
 
 <center><a href='index.php'>Retour a l'accueil</a></center>
