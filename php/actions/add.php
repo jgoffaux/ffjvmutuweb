@@ -8,7 +8,7 @@ if (isset($_POST['club'])) {
 
 	$regex_club = "/^[a-zA-Z0-9-]{1,}$/";
 	if (preg_match($regex_club, $club)) {
-	    if ($club == "admin") {
+	    if ($club == "admin" || $club == "mysql" || $club == "phpmyadmin") {
 		$code_erreur="Erreur sur le nom du CLUB, ";
 	    } else {
 	      $code_erreur="";
