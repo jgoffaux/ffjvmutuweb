@@ -1,5 +1,5 @@
 <?php
-include "functions/mysql.php";
+//include "functions/mysql.php";
 
 if (isset($_GET['var'])) {
 	$action = $_GET['var'];
