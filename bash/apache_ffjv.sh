@@ -10,20 +10,25 @@ if [ ! -d $DIR_APACHE_CFG ] ; then
 fi
 for i in `find $DIR_APACHE_CFG -type f `; do
 	user=`cat $i |grep ServerName | awk '{print $2}'`
-	groupadd $user
- 	useradd $user -d /var/www/mutu/$user/www -g $user -s /bin/false
+	/usr/sbin/groupadd $user
+ 	/usr/sbin/useradd $user -d /var/www/mutu/$user/www -g $user -s /bin/false
 	mkdir -p /var/www/mutu/$user/www
 	chown $user:$user -R /var/www/mutu/$user
 	mv $i $DIR_APACHE_ETC_CFG
 	mdp_ftp=`< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-15};echo;` 
-        echo $user:$mdp_ftp | chpasswd 
+        echo $user:$mdp_ftp | /usr/sbin/chpasswd
 	mdp_mysql=`< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-15};echo;`
 	clubcourt=`echo $user |awk -F'.' '{print $1}'`
 	mysql -e "CREATE DATABASE $clubcourt;"
 	mysql -e "GRANT USAGE ON *.* TO '$clubcourt'@'localhost' IDENTIFIED BY '$mdp_mysql';"
 	mysql -e "GRANT ALL PRIVILEGES ON \`$clubcourt\`.* TO '$clubcourt'@'localhost';"
-	a2ensite $user.conf
-	echo "Bonjour," > /tmp/email.txt
+	emailsend=`mysql ffjv -e "SELECT email FROM contact WHERE id = (SELECT contact_id FROM club_contact WHERE club_id = (SELECT id FROM club WHERE name = \"$clubcourt\"))" | sed '1d' | while read email; do  echo "$email"; done`
+	/usr/sbin/a2ensite $user.conf
+	echo "Subject: [FFJV] Activation de votre site" > /tmp/email.txt
+	echo "From: FFJV Noreply <noreply@ffjv.club>" >> /tmp/email.txt
+	echo "To : $emailsend" >> /tmp/email.txt
+	echo "" >> /tmp/email.txt
+	echo "Bonjour," >> /tmp/email.txt
 	echo "Votre site est desormais en ligne." >> /tmp/email.txt
 	echo "" >> /tmp/email.txt
 	echo "Vous trouverez ci-joint vos acces." >> /tmp/email.txt
@@ -44,8 +49,7 @@ for i in `find $DIR_APACHE_CFG -type f `; do
 	echo "" >> /tmp/email.txt
 	echo "Nous vous remercions pour votre confiance" >> /tmp/email.txt
 	echo "Le staff FFJV" >> /tmp/email.txt
-	emailsend=`mysql ffjv -e "SELECT email FROM contact WHERE id = (SELECT contact_id FROM club_contact WHERE club_id = (SELECT id FROM club WHERE name = \"$clubcourt\"))" | sed '1d' | while read email; do  echo "$email"; done`
- cat /tmp/email.txt | mail -s "[FFJV] Activation de votre site" $emailsend
+	cat /tmp/email.txt | /usr/sbin/sendmail -f noreply@ffjv.club -oi $emailsend
 	MODIF="1"
 done
 if [ "$MODIF" -eq "1" ] ; then
