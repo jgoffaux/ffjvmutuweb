@@ -1,5 +1,4 @@
 <?php
-//include "functions/mysql.php";
 
 if (isset($_GET['var'])) {
 	$action = $_GET['var'];
@@ -14,6 +13,9 @@ if (isset($_GET['var'])) {
                 case "3":
                         include 'actions/delete.php';
                         break;
+		case "4":
+			include 'actions/listing.php';
+			break;
                 default:
                         include 'accueil.html';
         endswitch;
